@@ -8,9 +8,7 @@ const app = express();
 
 // Setup middleware
 app.use(requestId);
-app.use(
-  morgan('combined', { stream: { write: (message) => logger.info(message) } })
-);
+app.use(logger.requests);
 
 app.get('/', (req, res, next) => {
   res.json({
