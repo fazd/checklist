@@ -2,7 +2,9 @@ const express = require('express');
 const requestId = require('express-request-id')();
 
 const logger = require('./config/logger');
+const api = require('./api');
 
+// Init app
 const app = express();
 
 // Setup middleware
@@ -14,6 +16,9 @@ app.get('/', (req, res, next) => {
     message: 'Welcome to the API',
   });
 });
+
+// Setup router and routes
+app.use('/api', api);
 
 // No route found handler
 app.use((req, res, next) => {
