@@ -1,11 +1,10 @@
-const { Model } = require('mongoose');
+const Model = require('./model');
 
 exports.id = async (req, res, next, id) => {
   try {
     const doc = await Model.findById(id).exec();
     if (!doc) {
       const message = `${Model.modelName} not found`;
-
       next({
         message,
         statusCode: 404,
