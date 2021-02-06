@@ -30,6 +30,18 @@ const fields = {
   },
 };
 
+const references = {
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: 'user',
+    required: true,
+  },
+  groupId: {
+    type: Schema.Types.ObjectId,
+    ref: 'group',
+  },
+};
+
 const task = new Schema(fields, {
   timestamps: true,
 });
@@ -37,4 +49,5 @@ const task = new Schema(fields, {
 module.exports = {
   Model: mongoose.model('task', task),
   fields,
+  references,
 };
