@@ -1,4 +1,3 @@
-const { fields } = require('../api/v1/tasks/model');
 const config = require('../config');
 
 const { pagination, sort } = config;
@@ -34,8 +33,20 @@ const sortCompactToStr = (sortBy, direction) => {
   return `${dir}${sortBy}`;
 };
 
+const filterByNested = (params, referencesNames) => {
+  const paramsNames = Object.getOwnPropertyNames(params);
+  const populateNames = referencesNames.filter(
+    (item) => !paramsNames.includes(item)
+  );
+  return {
+    filters: params,
+    populate: populateNames.join(' '),
+  };
+};
+
 module.exports = {
   paginationParseParams,
   sortParseParams,
   sortCompactToStr,
+  filterByNested,
 };

@@ -42,7 +42,7 @@ const references = {
   },
 };
 
-const task = new Schema(fields, {
+const task = new Schema(Object.assign(fields, references), {
   timestamps: true,
 });
 
