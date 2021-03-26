@@ -77,6 +77,7 @@ exports.all = async (req, res, next) => {
   const { sortBy, direction } = sortParseParams(query, fields);
   const { filters, populate } = filterByNested(params, referencesNames);
 
+
   const all = Model.find({})
     .sort(sortCompactToStr(sortBy, direction))
     .skip(skip)
