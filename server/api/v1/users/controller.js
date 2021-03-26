@@ -1,3 +1,4 @@
+const { info } = require('winston');
 const { Model, fields } = require('./model');
 const { paginationParseParams } = require('../../../utils');
 const { sortParseParams, sortCompactToStr } = require('../../../utils');
@@ -110,3 +111,45 @@ exports.delete = async (req, res, next) => {
     next(new Error(error));
   }
 };
+
+
+exports.signup = async (req, res, next) => {
+
+}
+
+exports.signin = async (req, res, next) => {
+  const { body = {} } = req;
+  const { email = '', password = '' } = body;
+
+  try {
+    const user = await Model.findOne({ email }).exec();
+    if (!user) {
+      const message = 'Email or password are invalid';
+
+      return next({
+        success: false,
+        message,
+        statusCode: 401,
+        level: 'info',
+      });
+    }
+    const verified = await user.verifyPassword(password);
+    if (!verified) {
+      const message = 'Email or password are invalid';
+
+      return next({
+        success: false,
+        message,
+        statusCode: 401,
+        level: info,
+      })
+    }
+    return res.json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    return next(new Error(error));
+  }
+
+}
