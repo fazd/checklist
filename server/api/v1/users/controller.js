@@ -2,7 +2,73 @@ const { info } = require('winston');
 const { Model, fields } = require('./model');
 const { paginationParseParams } = require('../../../utils');
 const { sortParseParams, sortCompactToStr } = require('../../../utils');
+const { signToken } = require('../auth');
 
+
+exports.signup = async (req, res, next) => {
+  const { body = {} } = req;
+  const document = new Model(body);
+
+  try {
+    const doc = await document.save();
+    const { _id } = doc;
+    console.log(_id);
+    const token = signToken({ _id });
+    console.log(token);
+    res.status(201);
+    res.json({
+      sucess: true,
+      data: doc,
+      meta: {
+        token,
+      }
+    });
+  } catch (error) {
+    next(new Error(error));
+  }
+}
+
+exports.signin = async (req, res, next) => {
+  const { body = {} } = req;
+  const { email = '', password = '' } = body;
+
+  try {
+    const user = await Model.findOne({ email }).exec();
+    if (!user) {
+      const message = 'Email or password are invalid';
+
+      return next({
+        success: false,
+        message,
+        statusCode: 401,
+        level: 'info',
+      });
+    }
+    const verified = await user.verifyPassword(password);
+    if (!verified) {
+      const message = 'Email or password are invalid';
+
+      return next({
+        success: false,
+        message,
+        statusCode: 401,
+        level: info,
+      })
+    }
+    const { _id } = user;
+    const token = signToken({ _id });
+    return res.json({
+      success: true,
+      data: user,
+      meta: {
+        token,
+      }
+    });
+  } catch (error) {
+    return next(new Error(error));
+  }
+
+}
 
 exports.id = async (req, res, next, id) => {
 
@@ -112,44 +178,3 @@ exports.delete = async (req, res, next) => {
   }
 };
 
-
-exports.signup = async (req, res, next) => {
-
-}
-
-exports.signin = async (req, res, next) => {
-  const { body = {} } = req;
-  const { email = '', password = '' } = body;
-
-  try {
-    const user = await Model.findOne({ email }).exec();
-    if (!user) {
-      const message = 'Email or password are invalid';
-
-      return next({
-        success: false,
-        message,
-        statusCode: 401,
-        level: 'info',
-      });
-    }
-    const verified = await user.verifyPassword(password);
-    if (!verified) {
-      const message = 'Email or password are invalid';
-
-      return next({
-        success: false,
-        message,
-        statusCode: 401,
-        level: info,
-      })
-    }
-    return res.json({
-      success: true,
-      data: user,
-    });
-  } catch (error) {
-    return next(new Error(error));
-  }
-
-}
