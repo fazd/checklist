@@ -61,8 +61,6 @@ exports.create = async (req, res, next) => {
 
   const document = new Model(body);
 
-  console.log(body);
-
   try {
     const doc = await document.save();
     res.status(201);
@@ -80,9 +78,7 @@ exports.all = async (req, res, next) => {
   const { limit, page, skip } = paginationParseParams(query);
   const { sortBy, direction } = sortParseParams(query, fields);
   const { filters, populate } = filterByNested(params, referencesNames);
-
-
-  const all = Model.find({})
+  const all = Model.find(filters)
     .sort(sortCompactToStr(sortBy, direction))
     .skip(skip)
     .limit(limit)
