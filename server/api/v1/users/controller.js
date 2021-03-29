@@ -4,7 +4,6 @@ const { paginationParseParams } = require('../../../utils');
 const { sortParseParams, sortCompactToStr } = require('../../../utils');
 const { signToken } = require('../auth');
 
-
 exports.signup = async (req, res, next) => {
   const { body = {} } = req;
   const document = new Model(body);
@@ -14,19 +13,18 @@ exports.signup = async (req, res, next) => {
     const { _id } = doc;
     console.log(_id);
     const token = signToken({ _id });
-    console.log(token);
     res.status(201);
     res.json({
       sucess: true,
       data: doc,
       meta: {
         token,
-      }
+      },
     });
   } catch (error) {
     next(new Error(error));
   }
-}
+};
 
 exports.signin = async (req, res, next) => {
   const { body = {} } = req;
@@ -53,7 +51,7 @@ exports.signin = async (req, res, next) => {
         message,
         statusCode: 401,
         level: info,
-      })
+      });
     }
     const { _id } = user;
     const token = signToken({ _id });
@@ -62,16 +60,14 @@ exports.signin = async (req, res, next) => {
       data: user,
       meta: {
         token,
-      }
+      },
     });
   } catch (error) {
     return next(new Error(error));
   }
-
-}
+};
 
 exports.id = async (req, res, next, id) => {
-
   try {
     const doc = await (await Model.findById(id)).exec();
     if (!doc) {
@@ -177,4 +173,3 @@ exports.delete = async (req, res, next) => {
     next(new Error(error));
   }
 };
-

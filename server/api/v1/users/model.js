@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { hash, compare } = require('bcryptjs');
+const { default: validator } = require('validator');
 
 const { Schema } = mongoose;
 
@@ -22,6 +23,12 @@ const fields = {
     trim: true,
     unique: true,
     lowercase: true,
+    validate: {
+      validator(value) {
+        return validator.isEmail(value);
+      },
+      message: (props) => `${props.value} is not a valid email`,
+    },
   },
   password: {
     type: String,
@@ -38,12 +45,12 @@ const user = new Schema(fields, {
   },
   toObject: {
     virtuals: true,
-  }
+  },
 });
 
-
 user
-  .virtual('name').get(function getName() {
+  .virtual('name')
+  .get(function getName() {
     return `${this.firstName} ${this.lastName}`;
   })
   .set(function setName(name) {
