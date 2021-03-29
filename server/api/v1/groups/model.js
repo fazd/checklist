@@ -1,3 +1,4 @@
+const { body } = require('express-validator');
 const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
@@ -23,9 +24,8 @@ const group = new Schema(Object.assign(fields, references), {
   timestamps: true,
   toJSON: {
     virtuals: true,
-  }
+  },
 });
-
 
 const virtuals = {
   tasks: {
@@ -37,9 +37,12 @@ const virtuals = {
 
 group.virtual('tasks', virtuals.tasks);
 
+const sanitizers = [body('title').escape()];
+
 module.exports = {
   Model: mongoose.model('group', group),
   fields,
   references,
-  virtuals
+  virtuals,
+  sanitizers,
 };
