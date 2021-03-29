@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const tasksRouter = require('../tasks/routes');
 const controller = require('./controller');
+const { auth, me } = require('../auth');
 /*
  * /api/users/ POST  - CREATE
  * /api/users/ GET - READ ALL
@@ -22,8 +23,8 @@ router.use('/:userId/tasks', tasksRouter);
 
 router
   .route('/:id')
-  .get(controller.read)
-  .put(controller.update)
-  .delete(controller.delete);
+  .get(auth, me, controller.read)
+  .put(auth, me, controller.update)
+  .delete(auth, me, controller.delete);
 
 module.exports = router;
