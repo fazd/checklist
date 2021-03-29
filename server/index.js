@@ -1,6 +1,7 @@
 const express = require('express');
 const requestId = require('express-request-id')();
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const logger = require('./config/logger');
 const api = require('./api/v1');
@@ -11,6 +12,14 @@ const app = express();
 // Setup middleware
 app.use(requestId);
 app.use(logger.requests);
+
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'PUT', 'POST', 'DELETE'],
+    allowedHeaders: ['Accept', 'Content-Type', 'Authorization'],
+  })
+);
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
