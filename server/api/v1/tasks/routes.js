@@ -16,6 +16,45 @@ router.param('id', controller.id);
 router
   .route('/')
   .post(auth, controller.parentId, sanitizers, controller.create)
+  /**
+   *  @Swagger
+   *  /tasks/:
+   *    get:
+   *      tags:
+   *        -Tasks
+   *      description: Get all tasks
+   *      produces:
+   *        - application/json
+   *      responses:
+   *        200:
+   *          schema:
+   *            type: array
+   *            items:
+   *              type: object
+   *              properties:
+   *                id:
+   *                  type: string
+   *                title:
+   *                  type: string
+   *                completed:
+   *                  type: boolean
+   *                description:
+   *                  type: string
+   *                url:
+   *                  type: string
+   *                dueDate:
+   *                  type: string
+   *                  format: date-time
+   *                created-at:
+   *                  type: string
+   *                  format: date-time
+   *                updated-at:
+   *                  type: string
+   *                  format: date-time
+   * 
+   * 
+   * 
+   */
   .get(auth, controller.parentId, controller.all);
 
 router
