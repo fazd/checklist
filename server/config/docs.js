@@ -8,8 +8,8 @@ const swaggerDefinition = {
   schemes: ['htpp'],
   consumes: ['application/json'],
   produces: ['application/json'],
-}
+};
 
 module.exports = {
   swaggerDefinition,
-}
+};
